@@ -1,0 +1,22 @@
+{
+    "name": "lin07ux/net-court",
+    "description": "NetCourt is a SDK for HangZhou NetCourt notary: original confirmation and obtain evidence.",
+    "type": "library",
+    "keywords": ["net court", "sdk"],
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lin07ux",
+            "email": "linshengli.linux7@icloud.com",
+            "homepage": "https://github.com/Lin07ux"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "NetCourt\\": "src/"
+        }
+    }
+}
