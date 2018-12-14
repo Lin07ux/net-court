@@ -169,7 +169,6 @@ NotaryMeta 表示存证元数据，是进行确权时必须提供的信息，包
  accountId  | string   | yes      | 账号标识
  token      | string   | yes      | 事务 ID
  phase      | string   | yes      | 描述本条存证在存证事务中的阶段，用户可自行维护
- timestamp  | string   | yes      | 验签时间戳(毫秒值)，当前时刻，误差五分钟以内
  entity     | Identity | no       | 存证实体信息
  location   | Location | no       | 存证时设备和网络的基本信息
  properties | string   | no       | 扩展属性字段

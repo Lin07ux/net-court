@@ -211,13 +211,12 @@ class NotaryClient
             'accountId' => $this->accountId,
             'token' => $token,
             'phase' => $phase,
-            'timestamp' => $this->getMillisecond(),
             'entity' => $this->entity,
             'location' => $location,
             'properties' => $properties,
         ]);
 
-        $params = array_filter(['meta' => $meta, 'notaryContent' => $content, 'timestamp' => $meta['timestamp']]);
+        $params = array_filter(['meta' => $meta, 'notaryContent' => $content, 'timestamp' => $this->getMillisecond()]);
         $params['signedData'] = $this->sign($this->accountId, $meta['phase'], $params['timestamp']);
 
         return $this->post(self::API_NOTARY_CERT, $params);
