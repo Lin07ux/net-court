@@ -209,14 +209,16 @@ bizId 表示业务号，subBizId 表示子业务分类。
 
   main type      | bizId | sub type |  subBizId
 ---------------- | ----- | -------- | ---------------
- COPYRIGHT(版权)  | 1     | 视频      | VIDEO
-                 |       | 音频      | AUDIO
-                 |       | 图像      | IMAGE
-                 |       | 文本      | TEXT
+ COPYRIGHT(版权)  | 1     | 视频     | VIDEO
+     -           |  -    | 音频      | AUDIO
+     -           |  -    | 图像      | IMAGE
+     -           |  -    | 文本      | TEXT
  CONTRACT(合同)   | 2     | HR 合同   | HR
-                 |       | 租房合同   | HOUSERENTING
-                 |       | 租赁合同   | LEASING
-                 |       | 供应链合同 | SUPPLY_CHAIN
-                 |       | 旅游合同   | TRAVEL
-                 |       | 教育合同   | EDUCATION
-                 |       | 保险合同   | INSURANCE
+     -           | -     | 租房合同   | HOUSERENTING
+     -           | -     | 租赁合同   | LEASING
+     -           | -     | 供应链合同 | SUPPLY_CHAIN
+     -           | -     | 旅游合同   | TRAVEL
+     -           | -     | 教育合同   | EDUCATION
+     -           | -     | 保险合同   | INSURANCE
+
+
