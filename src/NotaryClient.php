@@ -237,7 +237,7 @@ class NotaryClient
             throw new BadResponseException('http post failed, please check your host or network', 500);
         }
 
-        list($result, $body) = $this->getResponseResult($response);
+        list($result, $body, $extension) = $this->getResponseResult($response);
 
         if ($response->getStatusCode() !== 200 || ! $result) {
             throw new BadResponseException('http post failed, please check your host or network', 500);
@@ -245,7 +245,7 @@ class NotaryClient
             throw new BadResponseException(isset($result['errMessage']) ? $result['errMessage'] : 'Unknow response');
         }
 
-        return [$result['responseData'], $body];
+        return [$result['responseData'], $body, $extension];
     }
 
     /**
@@ -270,15 +270,23 @@ class NotaryClient
      * 获取响应结果
      *
      * @param  ResponseInterface  $response
-     * @return array
+     * @return array [响应内容, 响应体(证书流), 文件名]
      */
     private function getResponseResult (ResponseInterface $response)
     {
         $body = $response->getBody();
         $result = $response->getHeader('Blockchainresponse') ?: [$body->getContents()];
         $result = $result ? json_decode($result[0], true) : [];
+        $filename = null;
 
-        return [$result, $body];
+        foreach($response->getHeader('Content-Disposition') as $value) {
+            if (preg_match('/.*filename=([^;]*).*/', $value, $matches) === 1) {
+                $filename = trim($matches[1], '" ');
+                break;
+            }
+        }
+
+        return [$result, $body, $filename];
     }
 
     /**
