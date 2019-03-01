@@ -24,7 +24,7 @@ class NotaryClient
     /**
      * 存证接口
      */
-    const API_NOTARY_CERT = '/api/blockChain/notaryCert';
+    const API_NOTARY_CERT = '/api/blockChain/notaryCertUrl';
 
     /**
      * @var string 存证域名
@@ -175,7 +175,7 @@ class NotaryClient
      * @param  Identity     $customer   客户信息
      * @param  Business     $biz        业务信息
      * @param  string|null  $properties 附加属性
-     * @return string
+     * @return Response
      */
     public function createNotaryToken (Identity $customer, Business $biz, $properties = null)
     {
@@ -190,9 +190,7 @@ class NotaryClient
         ]);
         $params['signedData'] = $this->sign($this->accountId, $params['bizId'], $params['timestamp']);
 
-        list($result) = $this->post(self::API_NOTARY_TOKEN, $params);
-
-        return $result;
+        return $this->post(self::API_NOTARY_TOKEN, $params);
     }
 
     /**
@@ -203,7 +201,7 @@ class NotaryClient
      * @param  string|null    $content    存证内容
      * @param  Location|null  $location   存证环境
      * @param  string|null    $properties 附加属性
-     * @return array
+     * @return Response
      */
     public function createNotaryCert ($token, $phase, $content = null, Location $location = null, $properties = null)
     {
@@ -227,9 +225,9 @@ class NotaryClient
      *
      * @param  string|\Psr\Http\Message\UriInterface  $uri
      * @param  array   $params
-     * @return array
+     * @return Response
      */
-    protected function post ($uri, array $params)
+    private function post ($uri, array $params)
     {
         try {
             $response = $this->getHttpClient()->post($uri, ['json' => $params]);
@@ -237,15 +235,7 @@ class NotaryClient
             throw new BadResponseException('http post failed, please check your host or network', 500);
         }
 
-        list($result, $body, $extension) = $this->getResponseResult($response);
-
-        if ($response->getStatusCode() !== 200 || ! $result) {
-            throw new BadResponseException('http post failed, please check your host or network', 500);
-        } elseif (empty($result['success'])) {
-            throw new BadResponseException(isset($result['errMessage']) ? $result['errMessage'] : 'Unknow response');
-        }
-
-        return [$result['responseData'], $body, $extension];
+        return new Response($response);
     }
 
     /**
@@ -264,29 +254,6 @@ class NotaryClient
         }
 
         return $this->httpClient;
-    }
-
-    /**
-     * 获取响应结果
-     *
-     * @param  ResponseInterface  $response
-     * @return array [响应内容, 响应体(证书流), 文件名]
-     */
-    private function getResponseResult (ResponseInterface $response)
-    {
-        $body = $response->getBody();
-        $result = $response->getHeader('Blockchainresponse') ?: [$body->getContents()];
-        $result = $result ? json_decode($result[0], true) : [];
-        $filename = null;
-
-        foreach($response->getHeader('Content-Disposition') as $value) {
-            if (preg_match('/.*filename=([^;]*).*/', $value, $matches) === 1) {
-                $filename = trim($matches[1], '" ');
-                break;
-            }
-        }
-
-        return [$result, $body, $filename];
     }
 
     /**
