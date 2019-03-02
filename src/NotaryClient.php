@@ -232,10 +232,16 @@ class NotaryClient
         try {
             $response = $this->getHttpClient()->post($uri, ['json' => $params]);
         } catch (RequestException $e) {
-            throw new BadResponseException('http post failed, please check your host or network', 500);
+            throw new BadResponseException($e->getMessage(), 500);
         }
 
-        return new Response($response);
+        $response = new Response($response);
+
+        if (! $response->isSuccess()) {
+            throw new BadResponseException($response->getCode().': '.$response->getMessage(), 500);
+        }
+
+        return $response;
     }
 
     /**
