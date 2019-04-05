@@ -57,7 +57,7 @@ abstract class Identity
      * @param  string  $userName
      * @return $this
      */
-    public function setUserName ($userName)
+    public function setName ($userName)
     {
         $this->data['certName'] = $userName;
 
@@ -69,7 +69,7 @@ abstract class Identity
      *
      * @return string|null
      */
-    public function getUserName ()
+    public function getName ()
     {
         return isset($this->data['certName']) ? $this->data['certName'] : null;
     }

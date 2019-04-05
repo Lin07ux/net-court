@@ -65,14 +65,6 @@ class Enterprise extends Identity
             throw new InvalidIdentityPropertyValueException('Enterprise legalPersonId can not be empty');
         }
 
-        if (empty($this->data['agent'])) {
-            throw new InvalidIdentityPropertyValueException('Enterprise agent can not be empty');
-        }
-
-        if (empty($this->data['agentId'])) {
-            throw new InvalidIdentityPropertyValueException('Enterprise agentId can not be empty');
-        }
-
         return array_filter($this->data);
     }
 
@@ -84,7 +76,7 @@ class Enterprise extends Identity
      */
     public function setCertType ($certType)
     {
-        if ($certType !== self::CERT_TYPE_CREDIT_CODE || $certType !== self::CERT_TYPE_REGISTERED_NUMBER) {
+        if ($certType !== self::CERT_TYPE_CREDIT_CODE && $certType !== self::CERT_TYPE_REGISTERED_NUMBER) {
             throw new \InvalidArgumentException('Enterprise cert type can only be "UNIFIED_SOCIAL_CREDIT_CODE" or "ENTERPRISE_REGISTERED_NUMBER"');
         }
 
