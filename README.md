@@ -54,7 +54,8 @@ try {
     $business = new Business(Business::COPYRIGHT, Business::COPYRIGHT_TEXT);
     $notaryClient = new NotaryClient('accountId', 'privateKeyValue');
 
-    $token = $notaryClient->createNotaryToken($customer, $business);
+    $response = $notaryClient->createNotaryToken($customer, $business);
+    $token = $response->getResponseData();
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
@@ -107,10 +108,12 @@ try {
     $business = new Business(Business::COPYRIGHT, Business::COPYRIGHT_TEXT);
     $notaryClient = new NotaryClient('accountId', 'privateKeyValue');
 
-    // Get the block chain hash and cert file stream
-    list($hash, $certStream) = $notaryClient->createNotaryCert('token', 'right notary', 'something to notary');
-    // Save the cert file stream to pdf
-    file_put_contents($hash.'.pdf', $certStream);
+    // Get the notary response
+    $response = $notaryClient->createNotaryCert('token', 'right notary', 'something to notary');
+    // Get notary hash
+    $hash = $response->getResponseData();
+    // Save the cert file
+    $response->downloadCert('path/to/store/cert/file', $hash.'.pdf');
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
@@ -129,10 +132,10 @@ try {
 
 该接口的响应数据分为两部分：
 
-* 响应的文本数据放在`Blockchainresponse` Header 中，以 JSON 字符串的形式返回。
-* 请求响应成功时，会将存证证书放在响应体中，以二进制方式返回。可以直接将该部分数据保存到文件中。
+* 响应结果数据放在 Body 中，以 JSON 字符串的形式返回。
+* 请求响应成功时，会将存证证书的下载链接放在`Certurl` Header 中，使用这个 URL 就可以下载证书。证书是有有效期的，一般情况在半小时内下载最好。
 
-解析`Blockchainresponse` Header，可以得到如下的数据：
+解析 Body 可以得到如下的数据：
 
   name        |  type  | required |  comment
 ------------- | ------ | -------- | -------------------------
