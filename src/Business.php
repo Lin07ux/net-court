@@ -41,6 +41,11 @@ class Business
     const COPYRIGHT_TEXT = 'TEXT';
 
     /**
+     * 版权侵权抓取子业务
+     */
+    const COPYRIGHT_INFRINGEMENT = 'INFRINGEMENT';
+
+    /**
      * HR 合同子业务
      */
     const CONTRACT_HR = 'HR';
@@ -120,11 +125,14 @@ class Business
 
         $biz = (int)$biz;
 
-        if (! in_array($biz, [self::COPYRIGHT, self::CONTRACT])) {
-            throw new \InvalidArgumentException('Biz id can only be '.self::COPYRIGHT.' or '.self::CONTRACT);
-        }
+        if ($biz !== $this->biz) {
+            if (! in_array($biz, [self::COPYRIGHT, self::CONTRACT])) {
+                throw new \InvalidArgumentException('Biz id can only be '.self::COPYRIGHT.' or '.self::CONTRACT);
+            }
 
-        $this->biz = $biz;
+            $this->biz = $biz;
+            $this->subBiz = null;
+        }
 
         return $this;
     }
