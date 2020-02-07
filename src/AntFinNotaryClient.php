@@ -17,7 +17,7 @@ class AntFinNotaryClient extends Client
     /**
      * 获取存证事务 ID 接口
      */
-    const API_TOKEN = '/api/blockChain/notaryToken';
+    const API_TOKEN = '/api/notaryToken';
 
     /**
      * 存证接口
@@ -101,7 +101,7 @@ class AntFinNotaryClient extends Client
 
         $response = json_decode($this->post(self::API_QUERY, $body), true);
 
-        if ($response['status'] === 'finish') {
+        if (isset($response['status']) && $response['status'] === 'finish') {
             return [
                 'file_uri' => $response['screenshotZip'],
                 'file_hash' => $response['zipHash'],
@@ -129,8 +129,12 @@ class AntFinNotaryClient extends Client
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        if (! $data['success']) {
-            throw new BadResponseException($data['errMessage'], $response->getStatusCode());
+        if (empty($data['success'])) {
+            $message = empty($data['errMessage']) ?
+                (empty($data['message']) ? 'Request Failed' : $data['message']) :
+                $data['errMessage'];
+
+            throw new BadResponseException($message, $response->getStatusCode());
         }
 
         return $data['responseData'];

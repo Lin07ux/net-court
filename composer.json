@@ -4,7 +4,8 @@
     "type": "library",
     "keywords": ["net court", "sdk"],
     "require": {
-        "guzzlehttp/guzzle": "~6.2"
+        "guzzlehttp/guzzle": "~6.2",
+        "ext-json": "*"
     },
     "license": "MIT",
     "authors": [
